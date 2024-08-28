@@ -1,30 +1,93 @@
-from django.shortcuts import render, get_object_or_404
 from .models import Customer, Book
 from django.http import HttpResponse
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
 from .serializers import *
-from django.db.models.signals import post_save, pre_delete
+from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.core.mail import send_mail
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.authentication import JWTAuthentication
-
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework import generics
 
 @receiver(post_save, sender=Book)
 def my_handler(sender, instance, **kwargs):
     print(f'Book {instance} has been saved.')
 
 
-class GetAllBooks(viewsets.ModelViewSet):
+User = get_user_model()
+
+class SignUpView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = CustomerSerializer
+
+class LoginView(generics.GenericAPIView):
+    permission_classes = (AllowAny,)
+    serializer_class = LoginSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        token = serializer.validated_data['token']
+        return Response({
+            'status': 'User Logged in Successfully',
+            'token': token
+        }, status=status.HTTP_200_OK)
+    
+class LogoutView(APIView):
+
+    def post(self, request):
+        request.user.auth_token.delete()  
+        return Response({'status': 'User logged out successfully'}, status=status.HTTP_200_OK)
+    
+class BuyBookViewSet(viewsets.ViewSet):
+    def create(self, request):
+        serializer = BuyBooksSerializer(data=request.data)
+        if serializer.is_valid():
+            customer_id = serializer.validated_data['customer_id']
+            book_ids = serializer.validated_data['book_ids']
+
+            try:
+                customer = Customer.objects.get(id=customer_id)
+            except Customer.DoesNotExist:
+                return Response({'error': 'Customer not found'}, status=status.HTTP_404_NOT_FOUND)
+
+            books = Book.objects.filter(id__in=book_ids)
+            for book in books:
+                book.quantity = book.quantity-1
+                book.save()
+            if books.count() != len(book_ids):
+                return Response({'error': 'One or more books not found'}, status=status.HTTP_404_NOT_FOUND)
+
+            customer.books.add(*books)
+            return Response({'status': 'Books added to customer'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class BuyBook(viewsets.ViewSet):
+    # permission_classes = [IsAuthenticated]
+    def buybook(self, bookar, pk=None):
+        try:
+            customer = Customer.objects.get(pk=pk)
+            bought_books = customer.books.append(bookar)
+            Customer.save(bought_books)
+            return Response(
+                f"{customer.username} has bought", status=status.HTTP_200_OK)
+
+        except Customer.DoesNotExist:
+            return Response(
+                f"error: customers do not exist.", status=status.HTTP_404_NOT_FOUND)
+
+
+class GetAllBooks(viewsets.ModelViewSet):  
+    # permission_classes = [IsAuthenticated]
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
-class GetAllCustomers(viewsets.ModelViewSet):
-    queryset = Customer.objects.all()
-    serializer_class = CustomerSerializer
+
+# class GetAllCustomers(viewsets.ModelViewSet):
+#     queryset = Customer.objects.all()
+#     serializer_class = CustomerSerializer
 
 
 class CommonBook(viewsets.ViewSet):
@@ -39,7 +102,6 @@ class CommonBook(viewsets.ViewSet):
             common_books = total_books_bought_by_customer.intersection(
                 total_books2)
             book_titles = [book.title for book in common_books]
-
             return Response({
                 "common_books": ', '.join(book_titles)
             }, status=status.HTTP_200_OK)
@@ -58,9 +120,9 @@ class CustomerBooks(viewsets.ViewSet):
             bought_books = customer.books.all()
             book_titles = [book.title for book in bought_books]
             books = ', '.join(book_titles)
-
+            
             return Response(
-                f"{customer.name} has {books}", status=status.HTTP_200_OK)
+                f"{customer.username} has {books}", status=status.HTTP_200_OK)
 
         except Customer.DoesNotExist:
             return Response(

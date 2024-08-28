@@ -1,16 +1,2 @@
-
-# Backend
-/Book_backend/venv/
-
-# Other files to ignore
-*.pyc
-__pycache__/
-*.pyo
-*.pyd
-*.db
-*.sqlite3
-/migrations/
-!migrations/__init__.py
-# Environment files
-.env
-.DS_Store
+venv/
+Book_backend/venv/

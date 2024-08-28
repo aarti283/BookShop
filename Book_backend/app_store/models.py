@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-
-User = get_user_model()
+from django.contrib.auth.models import AbstractUser
 
 
 class Book(models.Model):
@@ -18,11 +17,9 @@ class Book(models.Model):
         return self.title
 
 
-class Customer(models.Model):
-    name = models.CharField(max_length=30)
-    countt = models.IntegerField()
-    books = models.ManyToManyField(
-        Book, blank=True, related_name="customer_books")
+class Customer(AbstractUser):
+    countt = models.IntegerField(default=0)
+    books = models.ManyToManyField(Book, blank=True, related_name="customer_books")
     budget = models.IntegerField(default=0)
 
     @property
@@ -30,5 +27,4 @@ class Customer(models.Model):
         return self.books.all()
 
     def __str__(self) -> str:
-        return self.name
-    
+        return self.username
