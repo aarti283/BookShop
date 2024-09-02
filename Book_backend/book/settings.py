@@ -37,12 +37,13 @@ SECRET_KEY = 'django-insecure-g!+j$sai1b58(7!zpmn$o(bm8pxa#1u&m(ch7ukh+n^n2p=6r#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1','localhost']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'django_crontab',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -159,11 +160,16 @@ CORS_ALLOW_HEADERS = [
     "x-csrftoken",
     "x-requested-with",
 ]
-# settings.py
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'aarti.b@consultadd.com'
-# EMAIL_HOST_PASSWORD = 'Consultadd@aarti.b'
+CRONJOBS = [
+    ('*/1 * * * *', 'app_store.cron.my_job')
+]
+
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'ayrash@gmail.com'
+EMAIL_HOST_PASSWORD = 'ayrapass28'

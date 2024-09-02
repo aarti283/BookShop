@@ -13,6 +13,11 @@ class BookSerializer(serializers.ModelSerializer):
         model = Book
         fields = "__all__"
 
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta():
+        model = Address
+        fields = "__all__"
+
 class BuyBooksSerializer(serializers.Serializer):
     customer_id = serializers.IntegerField()
     book_ids = serializers.ListField(child=serializers.IntegerField())        

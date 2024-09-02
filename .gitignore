@@ -1,2 +1,4 @@
-venv/
-Book_backend/venv/
+booksui/node_modules
+booksui/*.json
+*/venv/
+
