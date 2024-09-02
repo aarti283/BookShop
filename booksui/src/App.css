@@ -1,0 +1,12 @@
+.link{
+  text-decoration: none;
+  color:black;
+}
+.bill-head{
+  display: flex;
+  justify-content: space-around;
+
+}
+body{
+  font-family: 'Inter', sans-serif;
+}
