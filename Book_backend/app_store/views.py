@@ -211,19 +211,3 @@ class Webhook(viewsets.ViewSet):
             return Response({'status': 'error', 'message': 'Customer not found.'}, status=404)
 
 
-def buy_book_view(request, cust, book, cust2):
-    customer = Customer.objects.get(pk=cust)
-    cust2 = Customer.objects.get(pk=cust2)
-
-    total_books_bought_by_customer = customer.total_books_bought
-    total_books2 = cust2.total_books_bought
-    t3 = total_books_bought_by_customer.intersection(total_books2)
-    book_titles = [book.title for book in t3]
-
-    print("Common books: ", ', '.join(book_titles))
-    print("common books: ", t3)
-    print(f"{customer.name} has bought {total_books_bought_by_customer} books.")
-    books = Book.objects.get(pk=book)
-    xyz = books.buyers()
-    print(f"{books.title} has bought {xyz} books.")
-    return HttpResponse("success")
