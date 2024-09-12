@@ -22,5 +22,7 @@ urlpatterns = [
     path('Books of Customer/<int:pk>/', CustomerBooks.as_view({'get': 'getcustomerbook'}), name='cutomer-books'),
     path('webhook/<int:pk>/', Webhook.as_view({'get': 'getwebhook'}), name='web-hooks'),
     path('Get Buyers of Book/<int:pk>/', GetBuyerOfBookID.as_view({'get': 'getbuyer'}), name='get-buyers'),
-    path("graphql/", GraphQLView.as_view(graphiql=True,schema=schema))
+    path("graphql/", GraphQLView.as_view(graphiql=True,schema=schema)),
+    path("graphql2/", GraphQLView.as_view(graphiql=True,schema=schema_book))
+
 ]

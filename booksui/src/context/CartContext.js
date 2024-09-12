@@ -12,11 +12,13 @@ const CartContextProvider = (props) => {
   const [quantity, setQuantity] = useState(Array(cartItems).fill(1));
   const [show, setShow] = useState(false);
   const [books, setBooks] = useState([]);
+  const [showAlert, setShowAlert] = useState(false);
+
   let flag = false;
   const toggleShowA = () => setShow(!show);
 
   const buy = () => {
-
+    setShowAlert(true);
     const token = localStorage.getItem("accessToken");
     const decodedToken = jwtDecode(token);
     const customerId = decodedToken.user_id;
@@ -112,6 +114,8 @@ const CartContextProvider = (props) => {
         clearCart,
         quantity,
         total_bill,
+        showAlert,
+        setShowAlert
       }}
     >
       {props.children}

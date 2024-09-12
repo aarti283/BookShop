@@ -4,9 +4,10 @@ import Button from "react-bootstrap/Button";
 import { useState, useContext, useEffect } from "react";
 import { CartContext } from "../context/CartContext";
 import { jwtDecode } from "jwt-decode";
+import Alert from "@mui/material/Alert";
 
 export default function Address() {
-  const { buy } = useContext(CartContext);
+  const { buy, showAlert, setShowAlert } = useContext(CartContext);
   const [street, setStreet] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
@@ -59,19 +60,17 @@ export default function Address() {
   }
 
   return (
+   
     <div
         style={{
             maxWidth: "400px",
             margin: "50px auto",
             padding: "20px",
-            borderRadius: "10px",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-            backgroundColor: "#f9f9f9",
         }}
     >
         {flag=="false" ? (
             <>
-            
+             <>
             <button
                 onClick={buy}
                 style={{
@@ -83,13 +82,12 @@ export default function Address() {
                     color: "#fff",
                     fontSize: "16px",
                     cursor: "pointer",
-                    transition: "background-color 0.3s ease",
                 }}
-                onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#0056b3")}
-                onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#007bff")}
-            >
-                Buy Now
+           >
+                Confirm and Buy
             </button>
+            </>
+            <img src="https://img.freepik.com/free-photo/pnga-stack-books-isolated-white-background_185193-164139.jpg"/>
             </>
         ) : (
             <>
@@ -197,6 +195,24 @@ export default function Address() {
                 </button>
             </>
         )}
+
+{showAlert && (
+        <Alert
+          style={{
+            position: "absolute",
+            bottom: "20px",
+            right: "20px",
+            width: "450px",
+            marginRight: "20px",
+            float: "none",
+          }}
+          variant="filled"
+          severity="success"
+          onClose={() => setShowAlert(false)}
+        >
+          Books Purchased successfully
+        </Alert>
+      )}
     </div>
 );
 }

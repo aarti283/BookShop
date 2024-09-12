@@ -4,6 +4,7 @@ import { CartContext } from "../context/CartContext";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { Link } from "react-router-dom";
+import Alert from "@mui/material/Alert";
 
 //cartContext
 
@@ -18,6 +19,8 @@ const ShoppingCart = () => {
     quantity,
     total_bill,
   } = useContext(CartContext);
+
+  const [showAlert, setShowAlert] = useState(false);
 
   return (
     <>
@@ -94,12 +97,7 @@ const ShoppingCart = () => {
                   cursor: "pointer",
                   transition: "background-color 0.3s ease",
                 }}
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#218838")
-                }
-                onMouseOut={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#28a745")
-                }
+                
               >
                 Buy Now
               </button></Link>
@@ -197,6 +195,24 @@ const ShoppingCart = () => {
           ))}
         </div>
       </div>
+
+{showAlert && (
+        <Alert
+          style={{
+            position: "absolute",
+            bottom: "20px",
+            right: "20px",
+            width: "450px",
+            marginRight: "20px",
+            float: "none",
+          }}
+          variant="filled"
+          severity="success"
+          onClose={() => setShowAlert(false)}
+        >
+          Logged in successfully
+        </Alert>
+      )}
     </>
   );
 };
