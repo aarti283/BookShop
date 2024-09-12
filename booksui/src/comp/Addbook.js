@@ -1,6 +1,4 @@
-import Form from "react-bootstrap/Form";
-import InputGroup from "react-bootstrap/InputGroup";
-import Button from "react-bootstrap/Button";
+
 import { useState } from "react";
 
 export default function Addbook() {
@@ -18,7 +16,7 @@ export default function Addbook() {
             img_url: imgurl
         };
         console.log(bookData);
-        fetch("http://127.0.0.1:8000/Books/", {
+        fetch("/Books/", {
             method: "POST",
             headers: {
                 Authorization: `Bearer ${token}`,
