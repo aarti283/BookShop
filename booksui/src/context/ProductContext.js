@@ -6,9 +6,9 @@ export const ProductContext = createContext();
 const ProductContextProvider = (props) => {
   const [products, setProducts] = useState([]);
   
-  // calling book list api
+  // Calling Book list api
   useEffect(() => {
-    fetch("http://localhost:8000/Books/", {
+    fetch("/Books/", {
       method: "GET",  
     })
       .then((response) => response.json())

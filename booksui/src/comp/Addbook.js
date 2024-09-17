@@ -1,49 +1,48 @@
-
 import { useState } from "react";
 
 export default function Addbook() {
-    const [title, setTitle] = useState("");
-    const [imgurl, setImgurl] = useState("");
-    const [price, setPrice] = useState(0);
-    const [quantity, setQuantity] = useState(0);
+  const [title, setTitle] = useState("");
+  const [imgurl, setImgurl] = useState("");
+  const [price, setPrice] = useState(0);
+  const [quantity, setQuantity] = useState(0);
 
-    function addbook() {
-        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI4MzQ3MTc1LCJpYXQiOjE3MjQ3NDcxNzUsImp0aSI6IjZkMmEzYWUxZTU4YTQ5MGJhZGU3MDljNjMwYjQ3MzNmIiwidXNlcl9pZCI6MX0.qQolFrPj6D15mDrPoYjfSIqaEtLB5lMPMaHMhfogxOI'
-        const bookData = {
-            title: title,
-            price: price,
-            quantity: quantity,
-            img_url: imgurl
-        };
-        console.log(bookData);
-        fetch("/Books/", {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(bookData),
-        })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            return response.json();
-        })
-        .then((data) => {
-            console.log("Book added:", data);
-            // Optionally, reset form fields after submission
-            setTitle("");
-            setImgurl("");
-            setPrice(0);
-            setQuantity(0);
-        })
-        .catch((error) => {
-            console.error("Error adding book:", error);
-        });
-    }
+  function addbook() {
+    const token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI4MzQ3MTc1LCJpYXQiOjE3MjQ3NDcxNzUsImp0aSI6IjZkMmEzYWUxZTU4YTQ5MGJhZGU3MDljNjMwYjQ3MzNmIiwidXNlcl9pZCI6MX0.qQolFrPj6D15mDrPoYjfSIqaEtLB5lMPMaHMhfogxOI";
+    const bookData = {
+      title: title,
+      price: price,
+      quantity: quantity,
+      img_url: imgurl,
+    };
+    console.log(bookData);
+    fetch("/Books/", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(bookData),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Book added:", data);
+        // Optionally, reset form fields after submission
+        setTitle("");
+        setImgurl("");
+        setPrice(0);
+        setQuantity(0);
+      })
+      .catch((error) => {
+        console.error("Error adding book:", error);
+      });
+  }
 
-    
   return (
     <div
       style={{

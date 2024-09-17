@@ -195,8 +195,8 @@ class Webhook(viewsets.ViewSet):
     def getwebhook(self, request, pk):
         try:
             customer = Customer.objects.get(id=pk)
-            subject = 'Welcome to GFG world'
-            message = f'Hi {customer.username}, thank you for registering in geeksforgeeks.'
+            subject = 'Welcome to Book Store'
+            message = f'Hi {customer.username}, thank you for registering in Book Store'
             email_from = settings.EMAIL_HOST_USER
             recipient_list = [customer.email, 'aartibhawsar283@gmail.com']
             send_mail(subject, message, email_from, recipient_list)
@@ -209,5 +209,3 @@ class Webhook(viewsets.ViewSet):
             return Response({'status': 'error', 'message': 'Book not found.'}, status=404)
         except Customer.DoesNotExist:
             return Response({'status': 'error', 'message': 'Customer not found.'}, status=404)
-
-

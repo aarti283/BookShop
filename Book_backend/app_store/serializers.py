@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models  import*
+from .models import *
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import serializers
@@ -8,19 +8,22 @@ from django.contrib.auth import authenticate
 
 User = get_user_model()
 
+
 class BookSerializer(serializers.ModelSerializer):
     class Meta():
         model = Book
         fields = "__all__"
+
 
 class AddressSerializer(serializers.ModelSerializer):
     class Meta():
         model = Address
         fields = "__all__"
 
+
 class BuyBooksSerializer(serializers.Serializer):
     customer_id = serializers.IntegerField()
-    book_ids = serializers.ListField(child=serializers.IntegerField())        
+    book_ids = serializers.ListField(child=serializers.IntegerField())
 
 
 class CustomerSerializer(serializers.ModelSerializer):
@@ -38,6 +41,7 @@ class CustomerSerializer(serializers.ModelSerializer):
             budget=validated_data.get('budget', 0)
         )
         return user
+
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()

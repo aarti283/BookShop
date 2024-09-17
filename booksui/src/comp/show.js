@@ -13,10 +13,10 @@ const Show = (prop) => {
   console.log("item", products[item_id - 1].title);
   return (
     <>
-      <div className="container mt-5" style={{  width: "800px" }}>
+      <div className="container mt-5" style={{ width: "800px" }}>
         <div className="row">
-        <h3>{products[item_id].title}</h3>
-            
+          <h3>{products[item_id].title}</h3>
+
           <Card>
             <Card.Img
               style={{ height: "400px", width: "300px" }}
@@ -31,7 +31,9 @@ const Show = (prop) => {
               <h3>{products[item_id - 1].price}</h3>
               <Button
                 onClick={() => addToCart(products[item_id - 1])}
-                variant="primary" className="mt-3">
+                variant="primary"
+                className="mt-3"
+              >
                 Add to Cart
               </Button>
             </Card.Body>

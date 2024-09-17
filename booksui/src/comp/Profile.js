@@ -1,5 +1,4 @@
 import { jwtDecode } from "jwt-decode";
-import { useState } from "react";
 import { gql, useQuery } from "@apollo/client";
 
 // Fetching Profile information using GraphQL API
@@ -26,7 +25,7 @@ function Profile() {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
-  const cust = data.customers[user_id - 1]
+  const customer = data.customers[user_id - 1];
   return (
     <div>
       <div
@@ -42,7 +41,9 @@ function Profile() {
           Profile Information
         </h3>
 
-        <h4 style={{textTransform:"capitalize" }}>Name: {cust.username}</h4>
+        <h4 style={{ textTransform: "capitalize" }}>
+          Name: {customer.username}
+        </h4>
 
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
@@ -59,28 +60,23 @@ function Profile() {
             </tr>
           </thead>
           <tbody>
-            { 
-              cust.books.map((book, index) => (
-                <tr key={index}>
-                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                    {book.title}
-                  </td>
-                </tr>
-              ))}
+            {customer.books.map((book, index) => (
+              <tr key={index}>
+                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
+                  {book.title}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
-
-        <h3></h3>
         <tr>
           <th>Address:</th>
 
-          {cust.addresses.map(
-            (address, addressIndex) => (
-              <td key={addressIndex}>
-                {address.city}, {address.state}
-              </td>
-            )
-          )}
+          {customer.addresses.map((address, addressIndex) => (
+            <td key={addressIndex}>
+              {address.city}, {address.state}
+            </td>
+          ))}
         </tr>
       </div>
     </div>
