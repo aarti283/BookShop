@@ -3,7 +3,7 @@ from .views import *
 from rest_framework.routers import DefaultRouter
 from .schema import *
 from graphene_django.views import GraphQLView
-
+from django.views.decorators.csrf import csrf_exempt
 
 router = DefaultRouter()
 router.register('Books', GetAllBooks, basename='Bookslist')
@@ -22,7 +22,5 @@ urlpatterns = [
     path('Books of Customer/<int:pk>/', CustomerBooks.as_view({'get': 'getcustomerbook'}), name='cutomer-books'),
     path('webhook/<int:pk>/', Webhook.as_view({'get': 'getwebhook'}), name='web-hooks'),
     path('Get Buyers of Book/<int:pk>/', GetBuyerOfBookID.as_view({'get': 'getbuyer'}), name='get-buyers'),
-    path("graphql/", GraphQLView.as_view(graphiql=True,schema=schema)),
-    path("graphql2/", GraphQLView.as_view(graphiql=True,schema=schema_book))
-
+    path("graphql/", csrf_exempt(GraphQLView.as_view(graphiql=True,schema=schema))),
 ]

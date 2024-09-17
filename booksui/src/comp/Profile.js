@@ -1,73 +1,92 @@
 import { jwtDecode } from "jwt-decode";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { gql, useQuery } from "@apollo/client";
 
-export default function Profile() {
+// Fetching Profile information using GraphQL API
+const GET_BOOKS = gql`
+  query {
+    customers {
+      username
+      books {
+        title
+      }
+      addresses {
+        city
+        state
+      }
+    }
+  }
+`;
+
+function Profile() {
+  const { loading, error, data } = useQuery(GET_BOOKS);
+  console.log("data-----", data);
   const token = localStorage.getItem("accessToken");
   const decodedToken = jwtDecode(token);
   const [books, setBooks] = useState([]);
   const { user_id } = decodedToken;
 
-  useEffect(() => {
-    fetch(`/Books of Customer/${user_id}/`, {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        const booksPart = data.split("has ")[1];
-
-        const booksList = booksPart.split(",").map((book) => book.trim());
-
-        setBooks(booksList);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, []);
-  console.log(books);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  const cust = data.customers[user_id - 1]
   return (
-    <div
-      style={{
-        padding: "20px",
-        fontFamily: "Arial, sans-serif",
-        maxWidth: "600px",
-        margin: "auto",
-      }}
-    >
-      <h3 style={{ textAlign: "center", marginBottom: "20px", color: "#333" }}>
-        Profile Information
-      </h3>
+    <div>
+      <div
+        style={{
+          padding: "20px",
+          maxWidth: "600px",
+          margin: "auto",
+        }}
+      >
+        <h3
+          style={{ textAlign: "center", marginBottom: "20px", color: "#333" }}
+        >
+          Profile Information
+        </h3>
 
-      <div style={{ marginBottom: "20px", fontSize: "16px" }}>
-        <p>
-          <strong>Customer ID:</strong> {user_id}
-        </p>
+        <h4 style={{textTransform:"capitalize" }}>Name: {cust.username}</h4>
+
+        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <thead>
+            <tr style={{ backgroundColor: "#FFF9FA" }}>
+              <th
+                style={{
+                  padding: "10px",
+                  border: "1px solid #ddd",
+                  textAlign: "left",
+                }}
+              >
+                Books Purchased
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            { 
+              cust.books.map((book, index) => (
+                <tr key={index}>
+                  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
+                    {book.title}
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+
+        <h3></h3>
+        <tr>
+          <th>Address:</th>
+
+          {cust.addresses.map(
+            (address, addressIndex) => (
+              <td key={addressIndex}>
+                {address.city}, {address.state}
+              </td>
+            )
+          )}
+        </tr>
       </div>
-
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
-        <thead>
-          <tr style={{ backgroundColor: "#FFF9FA" }}>
-            <th
-              style={{
-                padding: "10px",
-                border: "1px solid #ddd",
-                textAlign: "left",
-              }}
-            >
-              Books
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {books &&
-            books.map((book, index) => (
-              <tr key={index}>
-                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                  {book}
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
     </div>
   );
 }
+
+export default Profile;

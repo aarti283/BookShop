@@ -1,7 +1,5 @@
 // CartContext.js
 import React, { createContext, useState } from "react";
-import Alert from 'react-bootstrap/Alert';
-import Toast from 'react-bootstrap/Toast';
 import {jwtDecode} from "jwt-decode";
 
 export const CartContext = createContext();
