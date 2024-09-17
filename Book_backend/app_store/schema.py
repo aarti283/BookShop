@@ -23,11 +23,11 @@ class BookType(DjangoObjectType):
         fields = ("title", "url")
 
 
-class Query2(graphene.ObjectType):
+class Query(graphene.ObjectType):
     customers = graphene.List(CustomerType)
 
     def resolve_customers(root, info):
         return Customer.objects.all()
 
 
-schema = graphene.Schema(query=Query2)
+schema = graphene.Schema(query=Query)
