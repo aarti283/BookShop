@@ -20,10 +20,8 @@ const GET_BOOKS = gql`
 
 function Profile() {
   const { loading, error, data } = useQuery(GET_BOOKS);
-  console.log("data-----", data);
   const token = localStorage.getItem("accessToken");
   const decodedToken = jwtDecode(token);
-  const [books, setBooks] = useState([]);
   const { user_id } = decodedToken;
 
   if (loading) return <p>Loading...</p>;
