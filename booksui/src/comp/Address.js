@@ -14,15 +14,14 @@ export default function Address() {
   const { user_id } = decodedToken;
 
   useEffect(() => {
-    fetch(`/getadd/${user_id}/`, {
+    fetch(`http://localhost:8000/getadd/${user_id}/`, {
       method: "GET",
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error("Address needs to be added first");
         }
         setFlag("false");
-        console.log("address needs to be added:", flag);
         return response.json();
       })
       .then((data) => {
@@ -42,7 +41,7 @@ export default function Address() {
     };
     console.log(userAddress);
     try {
-      const response = await fetch("/Address/", {
+      const response = await fetch("http://localhost:8000/Address/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

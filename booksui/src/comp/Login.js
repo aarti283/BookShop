@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import Button from "react-bootstrap/Button";
 import Alert from "@mui/material/Alert";
 
-export default function Login() {
+export default function Login(props) {
   const [showAlert, setShowAlert] = useState(false);
 
   const initialValues = {
@@ -24,7 +24,10 @@ export default function Login() {
     };
 
     try {
-      const response = await fetch("/login/", {
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+
+
+      const response = await fetch(`${apiUrl}/login/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,9 +38,13 @@ export default function Login() {
 
       if (data.token) {
         const accessToken = data.token.access;
+        const refreshToken = data.token.refresh;
         localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+        setShowAlert(true);
+        props.settoken(true);
       }
-      setShowAlert(true);
+      
       setTimeout(() => {
         setShowAlert(false);
       }, 3000);

@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  react:
+    build:
+      context: .
+      dockerfile: Dockerfile.react
+    ports:
+      - "3000:80"
+    volumes:
+      - ./booksui:/app
+    environment:
+      - NODE_ENV=production
+      # - REACT_APP_API_URL=http://django:8000
+    depends_on:
+      - django
+
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile.django
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./Book_backend:/app
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
+    
+
+  

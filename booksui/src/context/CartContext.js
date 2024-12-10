@@ -26,7 +26,7 @@ const CartContextProvider = (props) => {
       book_ids: books
   };
 
-    fetch("/buybook/", {
+    fetch("http://localhost:8000/buybook/", {
       method: "POST",
             headers: {
                 Authorization: `Bearer ${token}`,

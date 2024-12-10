@@ -11,7 +11,7 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Form from "react-bootstrap/Form";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Show from "./comp/show";
 import Addbook from "./comp/Addbook";
 import Signup from "./comp/Signup";
@@ -19,13 +19,18 @@ import Login from "./comp/Login";
 import Logout from "./comp/Logout";
 import Profile from "./comp/Profile";
 import Address from "./comp/Address";
+import ProtectedRoute from "./comp/ProtectedRoute";
 
 function App() {
+ 
+  const tok = localStorage.getItem("accessToken");
+  const [token, setToken] = useState(tok)
   const [searchQuery, setSearchQuery] = useState("");
   const searchProducts = useContext(ProductContext);
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
   };
+  
   return (
     <>
       <Router>
@@ -57,7 +62,7 @@ function App() {
                       </Link>
                     </Nav.Link>
                     <Nav.Link>
-                      <Link to="/login" className="link">
+                      <Link to="/login/" className="link">
                         Login
                       </Link>
                     </Nav.Link>
@@ -67,6 +72,7 @@ function App() {
                         Profile
                       </Link>
                     </Nav.Link>
+                    
 
                     <Form.Control
                       type="text"
@@ -75,8 +81,12 @@ function App() {
                       value={searchQuery}
                       onChange={handleSearch}
                     />
+                   
                   </Nav>
                 </Navbar.Collapse>
+               { token &&
+                <Logout settoken ={setToken}/>
+                }
               </Container>
             </Navbar>
             <Routes>
@@ -87,11 +97,10 @@ function App() {
               <Route path="/cart" element={<ShoppingCart />}></Route>
               <Route path="/add" element={<Addbook />}></Route>
               <Route path="/signup" element={<Signup />}></Route>
-              <Route path="/login" element={<Login />}></Route>
+              <Route path="/login" element={<Login settoken ={setToken}/>}></Route>
+              <Route path="/profile" element={<ProtectedRoute settoken ={setToken}/>}></Route>
               <Route path="/logout" element={<Logout />}></Route>
-              <Route path="/profile" element={<Profile />}></Route>
               <Route path="/address" element={<Address />}></Route>
-
               <Route path="/show/:item_id" element={<Show />}></Route>
             </Routes>
           </CartContextProvider>

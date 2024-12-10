@@ -12,7 +12,7 @@ from rest_framework import generics
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.core.mail import send_mail
-
+from rest_framework_simplejwt.tokens import RefreshToken
 
 @receiver(post_save, sender=Book)
 def my_handler(sender, instance, **kwargs):
@@ -28,26 +28,35 @@ class SignUpView(generics.CreateAPIView):
 
 
 class LoginView(generics.GenericAPIView):
-    permission_classes = (AllowAny,)
     serializer_class = LoginSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         token = serializer.validated_data['token']
+        print("permision----",request.user.username ,request.user.has_perm('App_Store.can_add_book'))
         return Response({
             'status': 'User Logged in Successfully',
             'token': token
         }, status=status.HTTP_200_OK)
 
 
-class LogoutView(APIView):
+from rest_framework.permissions import IsAuthenticated
 
+class LogoutView(APIView): 
+    
     def post(self, request):
-        request.user.auth_token.delete()
-        return Response({'status': 'User logged out successfully'}, status=status.HTTP_200_OK)
+        try:
+            # Get the refresh token from the request data
+            refresh_token = request.data["refresh"]
+            token = RefreshToken(refresh_token)
+            
+            # Blacklist the refresh token
+            token.blacklist()
 
-
+            return Response({'status': 'User logged out successfully'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 class BuyBookViewSet(viewsets.ViewSet):
     def create(self, request):
         serializer = BuyBooksSerializer(data=request.data)
@@ -112,13 +121,8 @@ class Getadd(viewsets.ViewSet):
                     "error": "Address of customers does not exist."
                 }, status=status.HTTP_404_NOT_FOUND)
             adds = ', '.join(add_list)
-            if len(adds) < 0:
-                return Response({
-                    "error": "An Error occured."
-                }, status=status.HTTP_404_NOT_FOUND)
-            else:
-                return Response(
-                    f"Address of {customer.username} is {adds}.", status=status.HTTP_200_OK)
+            return Response(
+                f"Address of {customer.username} is {adds}.", status=status.HTTP_200_OK)
         except Exception as e:
             return Response({
                 "error": "Address of customers does not exist."
@@ -153,7 +157,7 @@ class CommonBook(viewsets.ViewSet):
                 "error": "One or both customers do not exist."
             }, status=status.HTTP_404_NOT_FOUND)
 
-
+# get books of a customer by customer id
 class CustomerBooks(viewsets.ViewSet):
     # permission_classes = [IsAuthenticated]
     def getcustomerbook(self, request, pk=None):

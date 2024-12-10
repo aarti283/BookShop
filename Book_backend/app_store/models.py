@@ -23,13 +23,16 @@ class Customer(AbstractUser):
     books = models.ManyToManyField(
         Book, blank=True, related_name="customer_books")
     budget = models.IntegerField(default=0)
-
+    is_author = models.BooleanField(default=False)
+    
     @property
     def total_books_bought(self):
         return self.books.all()
 
     def __str__(self) -> str:
         return self.username
+    
+    
 
 
 class Address(models.Model):

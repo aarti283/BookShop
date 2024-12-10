@@ -18,7 +18,7 @@ export default function Signup() {
     };
 
     console.log(userData);
-    fetch("/signup/", {
+    fetch("http://localhost:8000/signup/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json", 

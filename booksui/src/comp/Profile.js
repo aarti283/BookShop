@@ -1,5 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import { gql, useQuery } from "@apollo/client";
+import { useEffect } from "react";
 
 // Fetching Profile information using GraphQL API
 const GET_BOOKS = gql`
@@ -26,6 +27,8 @@ function Profile() {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
   const customer = data.customers[user_id - 1];
+
+
   return (
     <div>
       <div
@@ -44,7 +47,7 @@ function Profile() {
         <h4 style={{ textTransform: "capitalize" }}>
           Name: {customer.username}
         </h4>
-
+        <br/>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ backgroundColor: "#FFF9FA" }}>
@@ -69,6 +72,8 @@ function Profile() {
             ))}
           </tbody>
         </table>
+        <br/>
+        
         <tr>
           <th>Address:</th>
 

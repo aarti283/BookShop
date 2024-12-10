@@ -1,20 +1,18 @@
-// ProductList.js
-import React, { useContext, useState } from "react";
-import { ProductContext } from "../context/ProductContext";
+import React, { useEffect, useState, useContext } from 'react';
+import ReactDOM from 'react-dom';
+import ReactPaginate from 'react-paginate';
 import { CartContext } from "../context/CartContext";
 import { Link } from "react-router-dom";
-import PaginatedItems from "./Pagination";
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 
-const ProductList = ({ searchQuery }) => {
-  const { products, searchProducts } = useContext(ProductContext);
-  const { addToCart } = useContext(CartContext);
-  const filteredProducts = searchQuery ? searchProducts(searchQuery) : products;
+function Items({ currentItems }) {
+    const { addToCart } = useContext(CartContext);
   return (
     <div className="container">
-      <PaginatedItems itemsPerPage={6} items = {filteredProducts}/>
-      {/* <div className="row">
-        {filteredProducts &&
-          filteredProducts.map((product, ind) => {
+    <div className="row">
+        {currentItems &&
+          currentItems.map((product, ind) => {
             return (
               <div
                 key={ind}
@@ -125,11 +123,35 @@ const ProductList = ({ searchQuery }) => {
                   </div>
                 </div>
               </div>
+            
             );
           })}
-      </div> */}
-    </div>
+      </div>
+      </div>
   );
-};
+}
 
-export default ProductList;
+export default function PaginatedItems({ itemsPerPage, items }) {
+  const [itemOffset, setItemOffset] = useState(0);
+  const endOffset = itemOffset + itemsPerPage;
+  const currentItems = items.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(items.length / itemsPerPage);
+
+  const handlePageChange = (event, page) => {
+    const newOffset = (page - 1) * itemsPerPage;
+    setItemOffset(newOffset);
+  };
+
+  return (
+    <>
+      <Items currentItems={currentItems} />
+      <Stack spacing={2}>
+        <Pagination
+          count={pageCount}
+          color="primary"
+          onChange={handlePageChange}
+        />
+      </Stack>
+    </>
+  );
+}

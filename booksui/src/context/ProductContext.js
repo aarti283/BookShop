@@ -1,19 +1,16 @@
 // ProductContext.js
 import React, { createContext, useState, useEffect } from "react";
-
 export const ProductContext = createContext();
 
 const ProductContextProvider = (props) => {
   const [products, setProducts] = useState([]);
   
-  // Calling Book list api
   useEffect(() => {
-    fetch("/Books/", {
+    fetch("http://localhost:8000/Books/", {
       method: "GET",  
     })
       .then((response) => response.json())
       .then((data) => {
-        // console.log(data);
         setProducts(data);
       })
       .catch((error) => {
@@ -25,7 +22,7 @@ const ProductContextProvider = (props) => {
     return products.filter((product) =>
       product.title.toLowerCase().includes(query.toLowerCase())
     );
-  };
+  }
 
   return (
     <ProductContext.Provider value={{ products, searchProducts }}>

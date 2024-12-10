@@ -3,3 +3,4 @@ booksui/*.json
 */venv/
 Book_backend/venv
 Book_backend/venv/
+.DS_Store

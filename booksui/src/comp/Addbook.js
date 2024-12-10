@@ -7,8 +7,6 @@ export default function Addbook() {
   const [quantity, setQuantity] = useState(0);
 
   function addbook() {
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI4MzQ3MTc1LCJpYXQiOjE3MjQ3NDcxNzUsImp0aSI6IjZkMmEzYWUxZTU4YTQ5MGJhZGU3MDljNjMwYjQ3MzNmIiwidXNlcl9pZCI6MX0.qQolFrPj6D15mDrPoYjfSIqaEtLB5lMPMaHMhfogxOI";
     const bookData = {
       title: title,
       price: price,
@@ -16,10 +14,9 @@ export default function Addbook() {
       img_url: imgurl,
     };
     console.log(bookData);
-    fetch("/Books/", {
+    fetch("http://localhost:8000/Books/", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(bookData),

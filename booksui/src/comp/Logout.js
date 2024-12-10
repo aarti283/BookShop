@@ -1,35 +1,39 @@
-
-import Button from "react-bootstrap/Button";
 import { useState } from "react";
+import { Modal, Button } from "react-bootstrap";
+import { FaPowerOff } from "react-icons/fa"; // Importing the logout icon from react-icons
 
-export default function Logout() {
-    
-    function logout() {
-        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI4MzQ3MTc1LCJpYXQiOjE3MjQ3NDcxNzUsImp0aSI6IjZkMmEzYWUxZTU4YTQ5MGJhZGU3MDljNjMwYjQ3MzNmIiwidXNlcl9pZCI6MX0.qQolFrPj6D15mDrPoYjfSIqaEtLB5lMPMaHMhfogxOI'
-        
-        fetch("/logout/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json" // This tells the server you're sending JSON data
-            },       
-        })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            return response.json();
-        })
-        .then((data) => {
-            console.log("User logged out:", data);
-        })
-        .catch((error) => {
-            console.error("Error adding book:", error);
-        });
-    }
+export default function Logout(props) {
+  const [show, setShow] = useState(false);
 
-    return (
-        <Button onClick={logout} variant="primary">
-        Log OUT
-    </Button>
-    );
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  function logout() {
+    localStorage.removeItem("accessToken");
+    setShow(false); 
+    props.settoken(null);
+  }
+
+  return (
+    <>
+      <div onClick={handleShow} style={{ cursor: "pointer" }}>
+        <FaPowerOff size={20} /> 
+      </div>
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Logout</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to log out?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={logout}>
+            Log Out
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
 }

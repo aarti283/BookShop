@@ -19,8 +19,8 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=50000),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=100),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
 }
@@ -37,7 +37,7 @@ SECRET_KEY = 'django-insecure-g!+j$sai1b58(7!zpmn$o(bm8pxa#1u&m(ch7ukh+n^n2p=6r#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1','localhost']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'app_store',
     'rest_framework_swagger',       
     'rest_framework',  
-    'rest_framework_simplejwt',             
+    'rest_framework_simplejwt',           
     'drf_yasg',
     'corsheaders',
     'graphene_django',
